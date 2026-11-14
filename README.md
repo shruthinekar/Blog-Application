@@ -1,8 +1,8 @@
-Codomax Blog Application
+###Codomax Blog Application
 
 A full-stack Blog Application developed as part of the Codomax internship.
 
-Features
+###Features
 
 
 User registration
@@ -20,7 +20,7 @@ Backend REST APIs
 Responsive design
 
 
-Technologies Used
+###Technologies Used
 
 HTML
 
@@ -32,7 +32,7 @@ Node.js
 
 Express.js
 
-Backend
+###Backend
 
 The backend uses Node.js and Express.js to provide APIs for:
 
@@ -45,6 +45,6 @@ Creating blogs
 Viewing blogs
 
 
-Author
+###Author
 
 Shruthi R Nekar
