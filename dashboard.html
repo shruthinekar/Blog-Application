@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Blog Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #fce4ec;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        button {
+            padding: 10px;
+            margin: 5px;
+            background: #e91e63;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .blog {
+            background: #fff0f5;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        input {
+            padding: 10px;
+            width: 90%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>My Blog Dashboard</h1>
+
+    <h3 id="welcome"></h3>
+
+    <button onclick="location.href='create-blog.html'">
+        Create Blog
+    </button>
+
+    <button onclick="location.href='profile.html'">
+        My Profile
+    </button>
+
+    <button onclick="logout()">
+        Logout
+    </button>
+
+    <br><br>
+
+    <input
+        type="text"
+        id="search"
+        placeholder="Search blogs..."
+        oninput="displayBlogs()"
+    >
+
+    <div id="blogList"></div>
+
+</div>
+
+<script>
+
+document.getElementById("welcome").innerText =
+    "Welcome " + (localStorage.getItem("name") || "User");
+
+
+function displayBlogs() {
+
+    let blogs = JSON.parse(
+        localStorage.getItem("blogs") || "[]"
+    );
+
+    let search = document.getElementById("search")
+        .value.toLowerCase();
+
+    let output = "";
+
+    blogs.forEach(function(blog, index) {
+
+        let text = (
+            blog.title + " " +
+            blog.category + " " +
+            blog.content
+        ).toLowerCase();
+
+        if (text.includes(search)) {
+
+            output += `
+                <div class="blog">
+
+                    <h2>${blog.title}</h2>
+
+                    <p>Category: ${blog.category}</p>
+
+                    <p>${blog.content}</p>
+
+                    <button onclick="viewBlog(${index})">
+                        View
+                    </button>
+
+                    <button onclick="editBlog(${index})">
+                        Edit
+                    </button>
+
+                    <button onclick="deleteBlog(${index})">
+                        Delete
+                    </button>
+
+                </div>
+            `;
+        }
+
+    });
+
+    document.getElementById("blogList").innerHTML =
+        output || "<p>No blogs found. Create a new blog.</p>";
+}
+
+
+function viewBlog(index) {
+
+    window.location.href =
+        "view-blog.html?index=" + index;
+
+}
+
+
+function editBlog(index) {
+
+    let blogs = JSON.parse(
+        localStorage.getItem("blogs") || "[]"
+    );
+
+    let blog = blogs[index];
+
+    let title = prompt(
+        "Enter new blog title:",
+        blog.title
+    );
+
+    if (title === null || title.trim() === "") {
+        return;
+    }
+
+    let content = prompt(
+        "Enter new blog content:",
+        blog.content
+    );
+
+    if (content === null || content.trim() === "") {
+        return;
+    }
+
+    blog.title = title;
+    blog.content = content;
+
+    localStorage.setItem(
+        "blogs",
+        JSON.stringify(blogs)
+    );
+
+    displayBlogs();
+
+    alert("Blog updated successfully!");
+
+}
+
+
+function deleteBlog(index) {
+
+    if (confirm("Are you sure you want to delete this blog?")) {
+
+        let blogs = JSON.parse(
+            localStorage.getItem("blogs") || "[]"
+        );
+
+        blogs.splice(index, 1);
+
+        localStorage.setItem(
+            "blogs",
+            JSON.stringify(blogs)
+        );
+
+        displayBlogs();
+
+        alert("Blog deleted successfully!");
+
+    }
+
+}
+
+
+function logout() {
+
+    localStorage.removeItem("name");
+
+    window.location.href = "login.html";
+
+}
+
+
+displayBlogs();
+
+</script>
+
+</body>
+</html>

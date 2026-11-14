@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Blog</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #8e2454;
+        }
+
+        input, textarea, select {
+            width: 95%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        textarea {
+            height: 150px;
+        }
+
+        button {
+            background: #8e2454;
+            color: white;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #641638;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Create New Blog</h1>
+
+    <form onsubmit="saveBlog(event)">
+
+        <label>Blog Title</label>
+        <input
+            type="text"
+            id="title"
+            placeholder="Enter blog title"
+            required
+        >
+
+        <label>Blog Category</label>
+        <select id="category" required>
+            <option value="">Select Category</option>
+            <option value="Technology">Technology</option>
+            <option value="Education">Education</option>
+            <option value="Lifestyle">Lifestyle</option>
+            <option value="Travel">Travel</option>
+        </select>
+
+        <label>Blog Content</label>
+        <textarea
+            id="content"
+            placeholder="Write your blog content here..."
+            required
+        ></textarea>
+
+        <button type="submit">Save Blog</button>
+
+        <button type="button"
+            onclick="location.href='dashboard.html'">
+            Back to Dashboard
+        </button>
+
+    </form>
+
+</div>
+
+<script>
+
+function saveBlog(event) {
+
+    event.preventDefault();
+
+    let title = document.getElementById("title").value.trim();
+    let category = document.getElementById("category").value;
+    let content = document.getElementById("content").value.trim();
+
+    if (title === "" || category === "" || content === "") {
+        alert("Please fill all fields!");
+        return;
+    }
+
+    let blogs = JSON.parse(
+        localStorage.getItem("blogs") || "[]"
+    );
+
+    blogs.push({
+        title: title,
+        category: category,
+        content: content
+    });
+
+    localStorage.setItem("blogs", JSON.stringify(blogs));
+
+    alert("Blog created successfully!");
+
+    window.location.href = "dashboard.html";
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Blog</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #fce4ec;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        textarea {
+            width: 95%;
+            height: 80px;
+            padding: 10px;
+        }
+
+        button {
+            background: #e91e63;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .comment {
+            background: #fff0f5;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1 id="title"></h1>
+    <h3 id="category"></h3>
+    <p id="content"></p>
+
+    <hr>
+
+    <h2>Like this Blog ❤️</h2>
+
+    <button onclick="toggleLike()" id="likeButton">
+        ❤️ Like
+    </button>
+
+    <p id="likeCount">Likes: 0</p>
+
+    <hr>
+
+    <h2>Comments</h2>
+
+    <textarea id="commentInput"
+        placeholder="Write your comment here"></textarea>
+
+    <br>
+
+    <button onclick="addComment()">Submit Comment</button>
+
+    <div id="commentList"></div>
+
+    <br>
+
+    <button onclick="goDashboard()">Back to Dashboard</button>
+
+</div>
+
+<script>
+
+let params = new URLSearchParams(window.location.search);
+let index = Number(params.get("index"));
+
+let blogs = JSON.parse(localStorage.getItem("blogs") || "[]");
+
+let validBlog =
+    params.get("index") !== null &&
+    Number.isInteger(index) &&
+    index >= 0 &&
+    index < blogs.length;
+
+if (!validBlog) {
+
+    document.getElementById("title").innerText = "Blog not found!";
+
+} else {
+
+    let blog = blogs[index];
+
+    if (!Array.isArray(blog.comments)) {
+        blog.comments = [];
+    }
+
+    if (typeof blog.likes !== "number") {
+        blog.likes = 0;
+    }
+
+    if (typeof blog.liked !== "boolean") {
+        blog.liked = false;
+    }
+
+    document.getElementById("title").innerText = blog.title;
+
+    document.getElementById("category").innerText =
+        "Category: " + blog.category;
+
+    document.getElementById("content").innerText = blog.content;
+
+    localStorage.setItem("blogs", JSON.stringify(blogs));
+
+    displayComments();
+    updateLikeButton();
+}
+
+function toggleLike() {
+
+    if (!validBlog) return;
+
+    let blog = blogs[index];
+
+    if (blog.liked) {
+        blog.likes--;
+        blog.liked = false;
+    } else {
+        blog.likes++;
+        blog.liked = true;
+    }
+
+    localStorage.setItem("blogs", JSON.stringify(blogs));
+
+    updateLikeButton();
+}
+
+function updateLikeButton() {
+
+    let blog = blogs[index];
+
+    document.getElementById("likeCount").innerText =
+        "Likes: " + blog.likes;
+
+    document.getElementById("likeButton").innerText =
+        blog.liked ? "❤️ Liked" : "❤️ Like";
+}
+
+function addComment() {
+
+    if (!validBlog) return;
+
+    let comment =
+        document.getElementById("commentInput").value.trim();
+
+    if (comment === "") {
+        alert("Please write a comment!");
+        return;
+    }
+
+    blogs[index].comments.push(comment);
+
+    localStorage.setItem("blogs", JSON.stringify(blogs));
+
+    document.getElementById("commentInput").value = "";
+
+    displayComments();
+}
+
+function displayComments() {
+
+    let output = "";
+
+    blogs[index].comments.forEach(function(comment, i) {
+
+        output += `
+            <div class="comment">
+                <p></p>
+                <button onclick="deleteComment(${i})">Delete</button>
+            </div>
+        `;
+
+    });
+
+    document.getElementById("commentList").innerHTML =
+        output || "<p>No comments yet.</p>";
+
+    let commentElements =
+        document.querySelectorAll(".comment p");
+
+    blogs[index].comments.forEach(function(comment, i) {
+        commentElements[i].textContent = comment;
+    });
+}
+
+function deleteComment(commentIndex) {
+
+    blogs[index].comments.splice(commentIndex, 1);
+
+    localStorage.setItem("blogs", JSON.stringify(blogs));
+
+    displayComments();
+}
+
+function goDashboard() {
+    window.location.href = "dashboard.html";
+}
+
+</script>
+
+</body>
+</html>

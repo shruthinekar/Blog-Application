@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Profile</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #fce4ec;
+            padding: 30px;
+        }
+        .profile {
+            background: white;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        button {
+            background: #e91e63;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile">
+    <h1>My Profile</h1>
+    <h3 id="userName"></h3>
+    <p id="userEmail"></p>
+
+    <button onclick="goDashboard()">Back to Dashboard</button>
+</div>
+
+<script>
+document.getElementById("userName").innerText =
+    "Name: " + (localStorage.getItem("name") || "Not available");
+
+document.getElementById("userEmail").innerText =
+    "Email: " + (localStorage.getItem("email") || "Not available");
+
+function goDashboard() {
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>
