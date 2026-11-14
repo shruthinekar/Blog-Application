@@ -5,11 +5,17 @@ Features
 
 
 User registration
+
 User login
+
 Dashboard
+
 Create blog
+
 View blogs
+
 Backend REST APIs
+
 Responsive design
 
 
